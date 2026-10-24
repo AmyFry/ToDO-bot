@@ -1,0 +1,8 @@
+# Библиотека, кэш, скомпилированные файлы, БД, токен, конфик
+.venv/ 
+__pycache__/
+*.pyc
+*.db
+.env
+settings.toml
+desktop.ini
