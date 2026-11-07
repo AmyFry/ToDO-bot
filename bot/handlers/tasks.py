@@ -3,11 +3,11 @@ from aiogram.fsm.state import StatesGroup, State
 from aiogram.filters import Command
 from aiogram.types import CallbackQuery, Message, ReplyKeyboardRemove
 from aiogram.fsm.context import FSMContext
-from bot.database.requests import add_category, add_task, delete_task, get_all_tasks, get_category, get_task, get_tasks_by_category, get_user, get_all_categories, mark_task_done, update_task_title
+from bot.database.requests import add_category, add_task, delete_task, get_all_tasks, get_category, get_done_tasks, get_task, get_tasks_by_category, get_user, get_all_categories, mark_task_done, update_task_title
 from bot.handlers.common import cmd_cancel
 from bot.keyboards.categories import categories_keyboard, task_by_category_keyboard
 from bot.keyboards.main_menu import get_main_menu
-from bot.keyboards.tasks import all_tasks_keyboard, batch_category_keyboard, batch_finish_keyboard, confirm_delete_task_keyboard, select_category_keyboard, task_actions_keyboard
+from bot.keyboards.tasks import all_tasks_keyboard, batch_category_keyboard, batch_finish_keyboard, confirm_delete_task_keyboard, done_tasks_keyboard, select_category_keyboard, task_actions_keyboard
 from bot.states.categories_states import CategoryState
 from bot.states.tasks_states import TaskState
 from aiogram.utils.keyboard import ReplyKeyboardBuilder, InlineKeyboardBuilder, InlineKeyboardButton
@@ -192,7 +192,7 @@ async def task_batch_process(callback: CallbackQuery, state: FSMContext):
 
     keyboard = batch_finish_keyboard()
 
-    await callback.message.edit_text('Отправляйте задачи. Чтобы завершить, нажмите "Закончить"', reply_markup=keyboard)
+    await callback.message.edit_text('Отправляйте задачи. Чтобы завершить, нажмите "Завершить добавление"', reply_markup=keyboard)
     await state.set_state(TaskState.waiting_for_tasks_batch)
     await callback.answer()
 
@@ -204,7 +204,7 @@ async def waiting_task_batch(message: Message, state: FSMContext):
     user_id = data['user_id']
 
     await add_task(user_id, category_id, message.text)
-    await message.answer('Задача добавлена. Введите следующую или нажмите "Закончить".')
+    await message.answer('Сделано. Введите следующую задачу или нажмите "Завершить добавление".')
 
 """Пользователь нажал на кнопку завершить."""
 @router.callback_query(F.data == 'task_batch_finish')
@@ -213,6 +213,28 @@ async def finish_task_batch(callback: CallbackQuery, state: FSMContext):
     await callback.message.edit_text('Все задачи сохранены')
     await callback.message.answer('Возвращаемся в меню:', reply_markup=get_main_menu())
     await callback.answer()
+
+
+# ========================================
+# ОБРАБОТЧИК ОТОБРАЖЕНИЯ ВЫПОЛНЕННЫХ ЗАДАЧ
+# ========================================
+@router.message(F.text == '📜 История')
+async def cmd_story_of_done_tasks(message: Message):
+    user = await get_user(message.from_user.id)
+    tasks = await get_done_tasks(user.id)
+    if not tasks:
+        await message.answer('У вас пока нет выполненных задач.')
+        return
+    
+    keyboard = done_tasks_keyboard(tasks)
+
+    await message.answer('Вот, что вы успели сделать:', reply_markup=keyboard)
+
+
+
+
+
+
 
 
 # =======================================

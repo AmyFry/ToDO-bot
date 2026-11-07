@@ -10,6 +10,7 @@ def get_main_menu() -> ReplyKeyboardMarkup:
     kb.button(text='➕ Добавить задачу')
     kb.button(text='➕ Добавить группу')
     kb.button(text='🟢 Добавить множество задач')
+    kb.button(text='📜 История')
     kb.button(text='❓ Помощь')
     kb.button(text='❌ Отмена')
     kb.adjust(2)

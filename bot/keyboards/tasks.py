@@ -54,3 +54,10 @@ def batch_finish_keyboard():
     builder.adjust(1)
     return builder.as_markup()
 
+"""Клавиатура, отображающая выполненные задачи"""
+def done_tasks_keyboard(tasks):
+    builder = InlineKeyboardBuilder()
+    for task in tasks:
+        builder.button(text=f'✅ {task.title}', callback_data=f'task_{task.id}')
+    builder.adjust(1)
+    return builder.as_markup()

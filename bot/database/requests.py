@@ -172,3 +172,13 @@ async def update_task_title(task_id, new_title):
             update_task.title = new_title
             await session.commit()
         return update_task
+
+"""Получение списка выполненных задач"""
+async def get_done_tasks(user_id):
+    async with async_session() as session:
+        result = await session.execute(
+            select(Task).where((Task.user_id == user_id) & (Task.is_done == True))
+        )
+        done_tasks = result.scalars().all()
+        return done_tasks
+
