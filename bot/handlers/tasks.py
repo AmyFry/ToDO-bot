@@ -207,7 +207,7 @@ async def finish_task_batch(callback: CallbackQuery, state: FSMContext):
     await callback.answer()
 
 """Обрабатываем отмену создания задачи"""
-@router.callback_query(F.data == 'task_cancel_create')
+@router.callback_query(F.data == 'create_cancel')
 async def task_cancel(callback: CallbackQuery, state:FSMContext):
     await state.clear()
     await callback.message.edit_text('Создание задачи отменено.')

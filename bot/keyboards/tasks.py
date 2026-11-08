@@ -33,7 +33,7 @@ def select_category_keyboard(categories):
     for category in categories:
         builder.button(text=category.name, callback_data=f'selectcat_{category.id}')
         
-    builder.button(text='❌ Отмена', callback_data=f'task_cancel_create')
+    builder.button(text='❌ Отмена', callback_data=f'create_cancel')
     builder.adjust(1)
     return builder.as_markup()
 
@@ -43,7 +43,7 @@ def batch_category_keyboard(categories):
     for batch in categories:
         builder.button(text=batch.name, callback_data=f'batchcat_{batch.id}')
         
-    builder.button(text='❌ Отмена', callback_data=f'task_cancel_create')
+    builder.button(text='❌ Отмена', callback_data=f'create_cancel')
     builder.adjust(1)
     return builder.as_markup()
 
