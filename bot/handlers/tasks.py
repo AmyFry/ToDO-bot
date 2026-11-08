@@ -160,14 +160,6 @@ async def choose_category_for_task(callback: CallbackQuery, state: FSMContext):
     await callback.message.edit_text(f'Задача "{title}" успешно создана и добавлена в группу!')
     await callback.message.answer('Главное меню:', reply_markup=get_main_menu())
 
-"""Обрабатываем отмену создания задачи"""
-@router.callback_query(TaskState.waiting_for_task_category, F.data == 'task_cancel_create')
-async def tasl_cancel(callback: CallbackQuery, state:FSMContext):
-    await state.clear()
-    await callback.message.edit_text('Создание задачи отменено.')
-    await callback.message.answer('Главное меню: ', reply_markup=get_main_menu())
-    await callback.answer()
-
 
 # =======================================
 # ОБРАБОТЧИК СОЗДАНИЯ МНОЖЕСТВА ЗАДАЧ
@@ -214,6 +206,13 @@ async def finish_task_batch(callback: CallbackQuery, state: FSMContext):
     await callback.message.answer('Возвращаемся в меню:', reply_markup=get_main_menu())
     await callback.answer()
 
+"""Обрабатываем отмену создания задачи"""
+@router.callback_query(F.data == 'task_cancel_create')
+async def task_cancel(callback: CallbackQuery, state:FSMContext):
+    await state.clear()
+    await callback.message.edit_text('Создание задачи отменено.')
+    await callback.message.answer('Главное меню: ', reply_markup=get_main_menu())
+    await callback.answer()
 
 # ========================================
 # ОБРАБОТЧИК ОТОБРАЖЕНИЯ ВЫПОЛНЕННЫХ ЗАДАЧ
